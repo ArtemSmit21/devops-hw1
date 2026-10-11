@@ -1,0 +1,23 @@
+---
+- name: Создать пользователя deployer
+  ansible.builtin.user:
+    name: deployer
+    shell: /bin/bash
+    groups: sudo
+    append: true
+    create_home: true
+
+- name: sudo без пароля для deployer
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/deployer
+    content: "deployer ALL=(ALL) NOPASSWD:ALL\n"
+    owner: root
+    group: root
+    mode: "0440"
+    validate: "visudo -cf %s"   # проверка синтаксиса, чтобы не сломать sudo
+
+- name: SSH-ключ для deployer
+  ansible.posix.authorized_key:
+    user: deployer
+    key: "{{ lookup('file', '~/.ssh/devops_key.pub') }}"
+    state: present
