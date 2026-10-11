@@ -1,0 +1,15 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+crash.log
+
+# Ключи и секреты
+*.pem
+*.key
+id_rsa*
+.env
+
+# Ansible
+*.retry
