@@ -1,0 +1,40 @@
+---
+- name: Каталоги приложения
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: deployer
+    group: deployer
+    mode: "0755"
+  loop:
+    - /opt/app
+    - /opt/app/html
+
+- name: docker-compose.yml
+  ansible.builtin.copy:
+    src: docker-compose.yml
+    dest: /opt/app/docker-compose.yml
+    owner: deployer
+    group: deployer
+    mode: "0644"
+
+- name: Конфиг reverse proxy
+  ansible.builtin.copy:
+    src: nginx.conf
+    dest: /opt/app/nginx.conf
+    owner: deployer
+    group: deployer
+    mode: "0644"
+
+- name: Страница Hello World
+  ansible.builtin.copy:
+    src: html/index.html
+    dest: /opt/app/html/index.html
+    owner: deployer
+    group: deployer
+    mode: "0644"
+
+- name: Запустить окружение (docker compose up -d)
+  community.docker.docker_compose_v2:
+    project_src: /opt/app
+    state: present

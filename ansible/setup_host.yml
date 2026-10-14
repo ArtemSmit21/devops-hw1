@@ -1,7 +1,8 @@
 ---
-- name: Настройка хоста (пользователь deployer + Docker)
+- name: Настройка хоста (пользователь deployer + Docker + приложение)
   hosts: vm
   become: true
   roles:
     - users
     - docker
+    - app
